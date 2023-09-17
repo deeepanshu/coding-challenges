@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { TokenBucketRateLimiter } from "../ratelimiters/tokenBucketRateLimiter";
+import { FixedWindowCounterRateLimiter } from "../ratelimiters/fixedWindowCounterRateLimiter";
 
-const tokenBucketRateLimiter = new TokenBucketRateLimiter()
+const tokenBucketRateLimiter = new TokenBucketRateLimiter();
+const fixedWindowCounterRateLimiter = new FixedWindowCounterRateLimiter();
 
 export const useRateLimiter = (request: Request, response: Response, next: NextFunction) => {
     const ip = request.socket.remoteAddress;
@@ -17,4 +19,4 @@ export const useRateLimiter = (request: Request, response: Response, next: NextF
     }
 };
 
-export const clearIntervals = tokenBucketRateLimiter.clearIntervals
+export const cleanUp = tokenBucketRateLimiter.cleanUp;

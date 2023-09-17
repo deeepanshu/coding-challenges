@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
-import { useRateLimiter, clearIntervals } from './src/middlewares/rateLimiter';
+import { useRateLimiter, cleanUp } from './src/middlewares/rateLimiter';
 const app = express();
 
 process.exit = () => {
-    clearIntervals();
+    cleanUp();
     process.exit();
 }
 

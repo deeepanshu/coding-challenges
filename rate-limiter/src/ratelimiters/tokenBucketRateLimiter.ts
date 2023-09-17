@@ -3,6 +3,14 @@ import { RateLimiter } from '../types';
 
 const MAX_TOKENS = 10;
 
+/**
+ * There is a ‘bucket’ that has capacity for N tokens. 
+ * Usually this is a bucket per user or IP address.
+ * Every time period a new token is added to the bucket, if the bucket is full the token is discarded.
+ * When a request arrives and the bucket contains tokens, the request is handled and a token is removed from the bucket.
+ * When a request arrives and the bucket is empty, the request is declined.
+ */
+
 class TokenBucket {
     bucket: string[] = [];
 
@@ -63,7 +71,7 @@ export class TokenBucketRateLimiter implements RateLimiter {
         return this.getToken(ip);
     }
 
-    clearIntervals() {
+    cleanUp() {
         this.intervals.forEach(interval => clearInterval(interval));
     }
 }
