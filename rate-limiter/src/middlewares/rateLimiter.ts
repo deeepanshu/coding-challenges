@@ -5,7 +5,7 @@ import { FixedWindowCounterRateLimiter } from "../ratelimiters/fixedWindowCounte
 const tokenBucketRateLimiter = new TokenBucketRateLimiter();
 const fixedWindowCounterRateLimiter = new FixedWindowCounterRateLimiter();
 
-export const useRateLimiter = (request: Request, response: Response, next: NextFunction) => {
+export const useTokenBucketRateLimiter = (request: Request, response: Response, next: NextFunction) => {
     const ip = request.socket.remoteAddress;
     if (!ip) {
         return response.status(400).send("No ip found in request");
@@ -18,5 +18,18 @@ export const useRateLimiter = (request: Request, response: Response, next: NextF
         return response.status(429).send(error.message);
     }
 };
+
+export const useFixedWindowCounterRateLimiter = (request: Request, response: Response, next: NextFunction) => {
+    const ip = request.socket.remoteAddress;
+    if (!ip) {
+        return response.status(400).send("No ip found in request");
+    }
+    try {
+        fixedWindowCounterRateLimiter.checkRateLimit(ip);
+        next();
+    } catch (error: any) {
+        return response.status(429).send(error.message);
+    }
+}
 
 export const cleanUp = tokenBucketRateLimiter.cleanUp;
